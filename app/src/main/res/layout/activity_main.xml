@@ -24,14 +24,10 @@
 
             <TextView
                 android:id="@+id/main_login_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/text_18"
                 android:layout_below="@id/main_image"
-                android:layout_marginHorizontal="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:text="Login to your Account"
-                android:textColor="#4C4C4C"
-                android:textSize="@dimen/_18sdp"
                 android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView
@@ -46,16 +42,10 @@
                 app:cardElevation="@dimen/_3sdp">
 
                 <EditText
-                    android:textSize="@dimen/_15sdp"
                     android:id="@+id/main_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    style="@style/edit_15"
                     android:hint="Email"
-                    android:inputType="textEmailAddress"
-                    android:padding="@dimen/_10sdp"
-                    android:textColor="#000000"
-                    android:textColorHint="#9A9A9A" />
+                    android:inputType="textEmailAddress" />
 
             </androidx.cardview.widget.CardView>
 
@@ -71,92 +61,80 @@
                 app:cardElevation="@dimen/_3sdp">
 
                 <EditText
-                    android:textSize="@dimen/_15sdp"
                     android:id="@+id/main_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    style="@style/edit_15"
                     android:hint="Password"
-                    android:inputType="textPassword"
-                    android:padding="@dimen/_10sdp"
-                    android:textColor="#000000"
-                    android:textColorHint="#9A9A9A" />
+                    android:inputType="textPassword" />
             </androidx.cardview.widget.CardView>
 
             <Button
-                android:textSize="@dimen/_15sdp"
                 android:id="@+id/main_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/button_15"
                 android:layout_below="@id/main_password_card"
-                android:layout_marginHorizontal="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_20sdp"
-                android:background="@drawable/custom_button"
                 android:text="Sign in"
-                app:backgroundTint="@null" />
+                android:textColor="@color/white_30" />
 
             <TextView
-                android:textSize="@dimen/_14sdp"
                 android:id="@+id/main_sign_in_with"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/text_14"
                 android:layout_below="@id/main_login"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_20sdp"
-                android:gravity="center"
                 android:text="- Or sign in with -" />
 
             <LinearLayout
                 android:id="@+id/main_social_login_layout"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_below="@id/main_sign_in_with"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp">
+                android:layout_height="@dimen/_50sdp"
+                android:layout_below="@id/main_sign_in_with"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp">
 
                 <androidx.cardview.widget.CardView
-                    android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="1"
                     app:cardCornerRadius="@dimen/_10sdp"
                     app:cardElevation="@dimen/_3sdp">
 
                     <ImageView
-                        android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_30sdp"
+                        android:layout_gravity="center"
                         android:src="@drawable/google" />
 
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="1"
                     app:cardCornerRadius="@dimen/_10sdp"
                     app:cardElevation="@dimen/_3sdp">
 
                     <ImageView
-                        android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_30sdp"
+                        android:layout_gravity="center"
                         android:src="@drawable/facebook" />
 
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="1"
                     app:cardCornerRadius="@dimen/_10sdp"
                     app:cardElevation="@dimen/_3sdp">
 
                     <ImageView
-                        android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_30sdp"
+                        android:layout_gravity="center"
                         android:src="@drawable/twitter" />
 
                 </androidx.cardview.widget.CardView>
@@ -164,26 +142,22 @@
             </LinearLayout>
 
             <LinearLayout
-                android:gravity="center"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:layout_marginHorizontal="@dimen/_20sdp"
-                android:layout_below="@id/main_social_login_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/main_social_login_layout"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:gravity="center">
 
                 <TextView
-                    android:textSize="@dimen/_14sdp"
-                    android:text="Don't have an account?"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    style="@style/text_14"
+                    android:text="Don't have an account?" />
 
                 <TextView
-                    android:textSize="@dimen/_14sdp"
-                    android:textColor="#1E309D"
+                    style="@style/text_14"
                     android:layout_marginLeft="@dimen/_3sdp"
                     android:text="Sign up"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textColor="@color/blue" />
 
             </LinearLayout>
 

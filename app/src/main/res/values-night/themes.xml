@@ -4,4 +4,13 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+
+    <style name="text_18" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginHorizontal">@dimen/_20sdp</item>
+        <item name="android:textColor">@color/white_light</item>
+        <item name="android:textSize">@dimen/_18sdp</item>
+    </style>
+
 </resources>
