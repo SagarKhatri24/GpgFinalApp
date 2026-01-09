@@ -154,6 +154,7 @@
                     android:text="Don't have an account?" />
 
                 <TextView
+                    android:id="@+id/main_signup"
                     style="@style/text_14"
                     android:layout_marginLeft="@dimen/_3sdp"
                     android:text="Sign up"

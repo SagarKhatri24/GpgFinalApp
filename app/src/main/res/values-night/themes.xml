@@ -3,6 +3,8 @@
     <style name="Base.Theme.GpgFinalApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="fontFamily">@font/nobile</item>
+        <item name="android:fontFamily">@font/nobile</item>
     </style>
 
     <style name="text_18" parent="Widget.AppCompat.TextView">
