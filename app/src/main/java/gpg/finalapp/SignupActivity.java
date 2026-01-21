@@ -1,6 +1,8 @@
 package gpg.finalapp;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,6 +42,7 @@ public class SignupActivity extends AppCompatActivity {
     //String[] cityArray = {"Select City","Ahmedabad","Vadodara","Surat","Rajkot"};
     ArrayList<String> cityArray;
     String sCity = ""; //Vadodara
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,10 @@ public class SignupActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        db = openOrCreateDatabase("GpgApp.db",MODE_PRIVATE,null);
+        String tableQuery = "CREATE TABLE IF NOT EXISTS USERS(USERID INTEGER PRIMARY KEY AUTOINCREMENT,NAME VARCHAR(100),EMAIL VARCHAR(50),CONTACT BIGINT(10),PASSWORD VARCHAR(20),GENDER VARCHAR(10),CITY VARCHAR(20))";
+        db.execSQL(tableQuery);
 
         name = findViewById(R.id.signup_name);
         email = findViewById(R.id.signup_email);
@@ -160,16 +167,28 @@ public class SignupActivity extends AppCompatActivity {
                     Toast.makeText(SignupActivity.this, "Please Accpet Terms & Conditions", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    System.out.println("Signup Successfully");
-                    Log.d("LOGIN", "Signup Successfully");
-                    Log.e("LOGIN", "Signup Successfully");
-                    Log.w("LOGIN", "Signup Successfully");
 
-                    Toast.makeText(SignupActivity.this, "Signup Successfully", Toast.LENGTH_SHORT).show();
-                    Snackbar.make(view, "Signup Successfully", Snackbar.LENGTH_LONG).show();
+                    String selectQuery = "SELECT * FROM USERS WHERE EMAIL='"+email.getText().toString()+"' OR CONTACT='"+contact.getText().toString()+"'";
+                    Cursor cursor = db.rawQuery(selectQuery,null);
+                    if(cursor.getCount()>0){
+                        Toast.makeText(SignupActivity.this, "User Already Exists", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        //String insertQuery = "INSERT INTO USERS VALUES (NULL,'John')";
+                        String insertQuery = "INSERT INTO USERS VALUES (NULL,'"+name.getText().toString()+"','"+email.getText().toString()+"','"+contact.getText().toString()+"','"+password.getText().toString()+"','"+sGender+"','"+sCity+"')";
+                        Log.d("INSERTQUERY",insertQuery);
+                        db.execSQL(insertQuery);
 
-                    onBackPressed();
+                        System.out.println("Signup Successfully");
+                        Log.d("LOGIN", "Signup Successfully");
+                        Log.e("LOGIN", "Signup Successfully");
+                        Log.w("LOGIN", "Signup Successfully");
 
+                        Toast.makeText(SignupActivity.this, "Signup Successfully", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(view, "Signup Successfully", Snackbar.LENGTH_LONG).show();
+
+                        onBackPressed();
+                    }
                 }
             }
         });

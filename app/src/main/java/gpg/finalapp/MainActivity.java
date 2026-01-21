@@ -1,6 +1,8 @@
 package gpg.finalapp;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     EditText email,password;
     TextView signup;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        db = openOrCreateDatabase("GpgApp.db",MODE_PRIVATE,null);
+        String tableQuery = "CREATE TABLE IF NOT EXISTS USERS(USERID INTEGER PRIMARY KEY AUTOINCREMENT,NAME VARCHAR(100),EMAIL VARCHAR(50),CONTACT BIGINT(10),PASSWORD VARCHAR(20),GENDER VARCHAR(10),CITY VARCHAR(20))";
+        db.execSQL(tableQuery);
 
         email = findViewById(R.id.main_email);
         password = findViewById(R.id.main_password);
@@ -54,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
                 if(email.getText().toString().trim().equals("")){
                     email.setError("Email Id Required");
                 }
-                else if(!email.getText().toString().trim().matches(emailPattern)){
+                /*else if(!email.getText().toString().trim().matches(emailPattern)){
                     email.setError("Valid Email Id Required");
-                }
+                }*/
                 else if(password.getText().toString().trim().equals("")){
                     password.setError("Password Required");
                 }
@@ -64,16 +71,23 @@ public class MainActivity extends AppCompatActivity {
                     password.setError("Min. 6 Char Password Required");
                 }
                 else {
-                /*System.out.println("Login Successfully");
-                Log.d("LOGIN","Login Successfully");
-                Log.e("LOGIN","Login Successfully");*/
 
-                    Toast.makeText(MainActivity.this, "Login Successfully", Toast.LENGTH_LONG).show();
-                    Snackbar.make(view, "Login Successfully", Snackbar.LENGTH_SHORT).show();
+                    String selectQuery = "SELECT * FROM USERS WHERE (EMAIL='"+email.getText().toString()+"' OR CONTACT='"+email.getText().toString()+"') AND PASSWORD='"+password.getText().toString()+"'";
+                    Cursor cursor = db.rawQuery(selectQuery,null);
+                    if(cursor.getCount()>0){
+                        /*System.out.println("Login Successfully");
+                        Log.d("LOGIN","Login Successfully");
+                        Log.e("LOGIN","Login Successfully");*/
 
-                    Intent intent = new Intent(MainActivity.this,DashboardActivity.class);
-                    startActivity(intent);
+                        Toast.makeText(MainActivity.this, "Login Successfully", Toast.LENGTH_LONG).show();
+                        Snackbar.make(view, "Login Successfully", Snackbar.LENGTH_SHORT).show();
 
+                        Intent intent = new Intent(MainActivity.this,DashboardActivity.class);
+                        startActivity(intent);
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this, "Login Unsuccessfully", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
