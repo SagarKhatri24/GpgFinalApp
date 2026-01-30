@@ -32,4 +32,10 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:text="Delete Profile" />
 
+    <Button
+        android:id="@+id/dashboard_category_list"
+        style="@style/button_15"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:text="Category Using ListView" />
+
 </LinearLayout>

@@ -1,5 +1,6 @@
 package gpg.finalapp;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     CardView confirmPasswordCard;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     RadioGroup gender;
+    RadioButton male,female;
     String sGender;
 
     Spinner spinner;
@@ -42,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
     ArrayList<String> cityArray;
     String sCity = ""; //Vadodara
     SQLiteDatabase db;
+    SharedPreferences sp;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,8 @@ public class ProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        sp = getSharedPreferences(ConstantSp.PREF,MODE_PRIVATE);
 
         db = openOrCreateDatabase("GpgApp.db",MODE_PRIVATE,null);
         String tableQuery = "CREATE TABLE IF NOT EXISTS USERS(USERID INTEGER PRIMARY KEY AUTOINCREMENT,NAME VARCHAR(100),EMAIL VARCHAR(50),CONTACT BIGINT(10),PASSWORD VARCHAR(20),GENDER VARCHAR(10),CITY VARCHAR(20))";
@@ -106,6 +111,8 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         gender = findViewById(R.id.profile_gender);
+        male = findViewById(R.id.profile_male);
+        female = findViewById(R.id.profile_female);
 
         gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -156,31 +163,89 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(ProfileActivity.this, "Please Select City", Toast.LENGTH_SHORT).show();
                 }
                 else {
-
-                    /*String selectQuery = "SELECT * FROM USERS WHERE EMAIL='"+email.getText().toString()+"' OR CONTACT='"+contact.getText().toString()+"'";
+                    String selectQuery = "SELECT * FROM USERS WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
                     Cursor cursor = db.rawQuery(selectQuery,null);
                     if(cursor.getCount()>0){
-                        Toast.makeText(ProfileActivity.this, "User Already Exists", Toast.LENGTH_SHORT).show();
+                        String updateQuery = "UPDATE USERS SET NAME='"+name.getText().toString()+"',EMAIL='"+email.getText().toString()+"',CONTACT='"+contact.getText().toString()+"',PASSWORD='"+password.getText().toString()+"',GENDER='"+sGender+"',CITY='"+sCity+"' WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
+                        db.execSQL(updateQuery);
+
+                        sp.edit().putString(ConstantSp.NAME,name.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.EMAIL,email.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.CONTACT,contact.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.PASSWORD,password.getText().toString()).commit();
+                        sp.edit().putString(ConstantSp.GENDER,sGender).commit();
+                        sp.edit().putString(ConstantSp.CITY,sCity).commit();
+
+                        Toast.makeText(ProfileActivity.this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
+                        setData(false);
                     }
                     else{
-                        //String insertQuery = "INSERT INTO USERS VALUES (NULL,'John')";
-                        String insertQuery = "INSERT INTO USERS VALUES (NULL,'"+name.getText().toString()+"','"+email.getText().toString()+"','"+contact.getText().toString()+"','"+password.getText().toString()+"','"+sGender+"','"+sCity+"')";
-                        Log.d("INSERTQUERY",insertQuery);
-                        db.execSQL(insertQuery);
-
-                        System.out.println("Signup Successfully");
-                        Log.d("LOGIN", "Signup Successfully");
-                        Log.e("LOGIN", "Signup Successfully");
-                        Log.w("LOGIN", "Signup Successfully");
-
-                        Toast.makeText(ProfileActivity.this, "Signup Successfully", Toast.LENGTH_SHORT).show();
-                        Snackbar.make(view, "Signup Successfully", Snackbar.LENGTH_LONG).show();
-
-                        onBackPressed();
-                    }*/
+                        Toast.makeText(ProfileActivity.this, "Invalid User", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
-        
+
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setData(true);
+            }
+        });
+
+        setData(false);
+
+    }
+
+    private void setData(boolean b) {
+        if(b){
+            confirmPasswordCard.setVisibility(View.VISIBLE);
+            updateProfile.setVisibility(View.VISIBLE);
+            editProfile.setVisibility(View.GONE);
+        }
+        else{
+            confirmPasswordCard.setVisibility(View.GONE);
+            updateProfile.setVisibility(View.GONE);
+            editProfile.setVisibility(View.VISIBLE);
+        }
+
+        name.setEnabled(b);
+        email.setEnabled(b);
+        contact.setEnabled(b);
+        password.setEnabled(b);
+        confirmPassword.setEnabled(b);
+        male.setEnabled(b);
+        female.setEnabled(b);
+        spinner.setEnabled(b);
+
+        name.setText(sp.getString(ConstantSp.NAME,""));
+        email.setText(sp.getString(ConstantSp.EMAIL,""));
+        contact.setText(sp.getString(ConstantSp.CONTACT,""));
+        password.setText(sp.getString(ConstantSp.PASSWORD,""));
+        confirmPassword.setText(sp.getString(ConstantSp.PASSWORD,""));
+
+        sGender = sp.getString(ConstantSp.GENDER,"");
+        if(sGender.equalsIgnoreCase("Male")){
+            male.setChecked(true);
+            female.setChecked(false);
+        }
+        else if(sGender.equalsIgnoreCase("Female")){
+            male.setChecked(false);
+            female.setChecked(true);
+        }
+        else{
+            male.setChecked(false);
+            female.setChecked(false);
+        }
+
+        sCity = sp.getString(ConstantSp.CITY,"");
+        int iCityPosition =0;
+        for(int i=0;i<cityArray.size();i++){
+            if(sCity.equalsIgnoreCase(cityArray.get(i))){
+                iCityPosition= i;
+                break;
+            }
+        }
+        spinner.setSelection(iCityPosition);
     }
 }
