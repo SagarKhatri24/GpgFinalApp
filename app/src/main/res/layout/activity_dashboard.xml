@@ -38,4 +38,10 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:text="Category Using ListView" />
 
+    <Button
+        android:id="@+id/dashboard_category_recycler"
+        style="@style/button_15"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:text="Category RecyclerView" />
+
 </LinearLayout>
