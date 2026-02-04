@@ -13,4 +13,5 @@ public class ConstantSp {
     public static String CITY = "city";
 
     public static String CATEGORY_ID = "categoryId";
+    public static String SUBCATEGORY_ID = "subcategoryId";
 }

@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".SubCategoryActivity">
+    tools:context=".ProductActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sub_category_recyclerview"
+        android:id="@+id/product_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

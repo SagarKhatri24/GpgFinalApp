@@ -1,7 +1,10 @@
 package gpg.finalapp;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +24,12 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
     Context context;
     ArrayList<SubCategoryList> arrayList;
+    SharedPreferences sp;
 
     public SubCategoryAdapter(Context context, ArrayList<SubCategoryList> arrayList) {
         this.context = context;
         this.arrayList = arrayList;
+        sp=context.getSharedPreferences(ConstantSp.PREF,MODE_PRIVATE);
     }
 
     @NonNull
@@ -47,13 +52,14 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
     public void onBindViewHolder(@NonNull SubCategoryAdapter.MyHolder holder, int position) {
         holder.name.setText(arrayList.get(position).getName());
 
-        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, SubCategoryActivity.class);
+                sp.edit().putInt(ConstantSp.CATEGORY_ID,arrayList.get(position).getId()).commit();
+                Intent intent = new Intent(context, ProductActivity.class);
                 context.startActivity(intent);
             }
-        });*/
+        });
 
     }
 

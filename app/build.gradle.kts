@@ -4,10 +4,7 @@ plugins {
 
 android {
     namespace = "gpg.finalapp"
-    compileSdk {
-        version = release(36)
-    }
-
+    compileSdk = 36
     defaultConfig {
         applicationId = "gpg.finalapp"
         minSdk = 36
