@@ -14,4 +14,15 @@ public class ConstantSp {
 
     public static String CATEGORY_ID = "categoryId";
     public static String SUBCATEGORY_ID = "subcategoryId";
+    public static String PRODUCT_ID = "productId";
+    public static String PRODUCT_NAME = "productName";
+    public static String PRODUCT_VENDOR_NAME = "productVendorName";
+    public static String originalPrice = "ORIGINAL PRICE";
+    public static String discountedPrice = "DISCOUNTED PRICE";
+    public static String discount = "DISCOUNT";
+    public static String product_image = "PRODUCTIMAGE";
+
+
+
+
 }

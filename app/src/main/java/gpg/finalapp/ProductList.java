@@ -2,15 +2,6 @@ package gpg.finalapp;
 
 public class ProductList {
     int productId, subcategoryId;
-    String vendorName;
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
 
     public int getProductId() {
         return productId;
@@ -34,6 +25,14 @@ public class ProductList {
 
     public void setVendorName(String vendorName) {
         this.vendorName = vendorName;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public String getOriginalPrice() {
@@ -60,8 +59,14 @@ public class ProductList {
         this.discount = discount;
     }
 
-    String productName;
-    String originalPrice;
-    String discountedPrice;
-    String discount;
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    String vendorName, productName, originalPrice, discountedPrice, discount, image;
+
 }

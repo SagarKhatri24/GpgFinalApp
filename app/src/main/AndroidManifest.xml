@@ -15,6 +15,9 @@
         android:theme="@style/Theme.GpgFinalApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ProductDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProductActivity"
             android:exported="false" />
         <activity
