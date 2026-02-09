@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -43,7 +44,7 @@ public class ProductActivity extends AppCompatActivity {
         sp = getSharedPreferences(ConstantSp.PREF,MODE_PRIVATE);
         productRecycler = findViewById(R.id.product_recyclerview);
 
-        productRecycler.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        productRecycler.setLayoutManager(new LinearLayoutManager(ProductActivity.this));
 
         arrayList = new ArrayList<ProductList>();
 

@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyHolder> {
@@ -56,7 +58,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyHolder
         holder.originalPrice.setText(arrayList.get(position).getOriginalPrice());
         holder.discountedPrice.setText(arrayList.get(position).getDiscountedPrice());
         holder.discount.setText(arrayList.get(position).getDiscount());
-        holder.image.setImageResource(Integer.parseInt(arrayList.get(position).getImage()));
+//        holder.image.setImageResource(Integer.parseInt(arrayList.get(position).getImage()));
+        Glide.with(context).load(arrayList.get(position).getImage()).placeholder(R.mipmap.ic_launcher).into(holder.image);
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
