@@ -4,12 +4,14 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +23,7 @@ import com.bumptech.glide.Glide;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
-    ImageView productImage, cart;
+    ImageView productImage, cart, minus;
     TextView productName, vendorName, originalPrice, discountedPrice, discount;
     LinearLayout cart_layout;
 
@@ -43,6 +45,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         cart = findViewById(R.id.product_detail_cart);
         cart_layout = findViewById(R.id.product_detail_cart_layout);
+        minus = findViewById(R.id.product_detail_cart_minus);
+
 
 
 
@@ -51,9 +55,11 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         productName.setText(sp.getString(ConstantSp.PRODUCT_NAME, ""));
         vendorName.setText(sp.getString(ConstantSp.PRODUCT_VENDOR_NAME, ""));
-        originalPrice.setText(sp.getString(ConstantSp.originalPrice,""));
-        discountedPrice.setText(sp.getString(ConstantSp.discountedPrice,""));
-        discount.setText(sp.getString(ConstantSp.discount,""));
+        originalPrice.setText("₹"+sp.getString(ConstantSp.originalPrice,""));
+        discountedPrice.setText("₹"+sp.getString(ConstantSp.discountedPrice,""));
+        discount.setText(sp.getString(ConstantSp.discount,"")+"%");
+
+        originalPrice.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
 
 
@@ -62,16 +68,18 @@ public class ProductDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 cart.setVisibility(GONE);
                 cart_layout.setVisibility(VISIBLE);
+                Toast.makeText(ProductDetailActivity.this, "Added To Cart", Toast.LENGTH_LONG).show();
             }
         });
 
-
-
-
-
-
-
-
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cart.setVisibility(VISIBLE);
+                cart_layout.setVisibility(GONE);
+                Toast.makeText(ProductDetailActivity.this, "Removed From Cart", Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 }

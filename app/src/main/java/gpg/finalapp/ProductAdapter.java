@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,9 +56,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyHolder
     public void onBindViewHolder(@NonNull ProductAdapter.MyHolder holder, int position) {
         holder.productName.setText(arrayList.get(position).getProductName());
         holder.vendorName.setText(arrayList.get(position).getVendorName());
-        holder.originalPrice.setText(arrayList.get(position).getOriginalPrice());
-        holder.discountedPrice.setText(arrayList.get(position).getDiscountedPrice());
-        holder.discount.setText(arrayList.get(position).getDiscount());
+        holder.originalPrice.setText("₹"+arrayList.get(position).getOriginalPrice());
+        holder.discountedPrice.setText("₹"+arrayList.get(position).getDiscountedPrice());
+        holder.discount.setText(arrayList.get(position).getDiscount()+"%");
+
+        holder.originalPrice.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 //        holder.image.setImageResource(Integer.parseInt(arrayList.get(position).getImage()));
         Glide.with(context).load(arrayList.get(position).getImage()).placeholder(R.mipmap.ic_launcher).into(holder.image);
 
