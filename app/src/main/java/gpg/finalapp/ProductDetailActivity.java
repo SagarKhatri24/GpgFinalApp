@@ -34,6 +34,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     int qty = 0;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         String cartTable = "CREATE TABLE IF NOT EXISTS cart (cartId INTEGER PRIMARY KEY AUTOINCREMENT, productId VARCHAR(10), userId VARCHAR(10), qty VARCHAR(5) )";
         db.execSQL(cartTable);
+
 
 
 
@@ -112,10 +115,17 @@ public class ProductDetailActivity extends AppCompatActivity {
                 if(qty==0){
                     cart.setVisibility(VISIBLE);
                     cart_layout.setVisibility(GONE);
+
+                    String deleteItem = "DELETE FROM cart WHERE productId = '"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"' AND userId - '"+sp.getString(ConstantSp.USERID,"")+"'";
+                    db.execSQL(deleteItem);
+
                     Toast.makeText(ProductDetailActivity.this, "Removed From Cart", Toast.LENGTH_LONG).show();
                 }
                 else{
                     cartQty.setText(String.valueOf(qty));
+
+                    String updateItem = "UPDATE cart SET qty = '"+qty+"' WHERE productId = '"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"' AND userId = '"+sp.getString(ConstantSp.USERID,"")+"'";
+                    db.execSQL(updateItem);
                 }
             }
         });
@@ -126,6 +136,9 @@ public class ProductDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 qty++;
                 cartQty.setText(String.valueOf(qty));
+
+                String updateItem = "UPDATE cart SET qty = '"+qty+"' WHERE productId = '"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"' AND userId = '"+sp.getString(ConstantSp.USERID,"")+"'";
+                db.execSQL(updateItem);
 
             }
         });
