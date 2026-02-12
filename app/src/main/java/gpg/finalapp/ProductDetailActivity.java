@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
 import android.media.Image;
 import android.os.Bundle;
@@ -23,16 +24,41 @@ import com.bumptech.glide.Glide;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
-    ImageView productImage, cart, minus;
-    TextView productName, vendorName, originalPrice, discountedPrice, discount;
+    ImageView productImage, cart, minus, plus;
+    TextView productName, vendorName, originalPrice, discountedPrice, discount, cartQty;
     LinearLayout cart_layout;
 
     SharedPreferences sp;
+
+    SQLiteDatabase db;
+
+    int qty = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
+
+        db = openOrCreateDatabase("GpgApp.db",MODE_PRIVATE,null);
+        String tableQuery = "CREATE TABLE IF NOT EXISTS USERS(USERID INTEGER PRIMARY KEY AUTOINCREMENT,NAME VARCHAR(100),EMAIL VARCHAR(50),CONTACT BIGINT(10),PASSWORD VARCHAR(20),GENDER VARCHAR(10),CITY VARCHAR(20))";
+        db.execSQL(tableQuery);
+
+        String categoryTable = "CREATE TABLE IF NOT EXISTS CATEGORY(CATEGORYID INTEGER PRIMARY KEY AUTOINCREMENT,CATEGORYNAME VARCHAR(50),CATEGORYIMAGE VARCHAR(200))";
+        db.execSQL(categoryTable);
+
+        String subcategoryTable = "CREATE TABLE IF NOT EXISTS SUBCATEGORY(SUBCATEGORYID INTEGER PRIMARY KEY AUTOINCREMENT,CATEGORYID VARCHAR(10), SUBCATEGORYNAME VARCHAR(50))";
+        db.execSQL(subcategoryTable);
+
+        String productTable = "CREATE TABLE IF NOT EXISTS PRODUCT(PRODUCTID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "SUBCATEGORYID VARCHAR(10), VENDORNAME VARCHAR(50), PRODUCTNAME VARCHAR(50), " +
+                "ORIGINALPRICE VARCHAR(20), DISCOUNTEDPRICE VARCHAR(20), DISCOUNT VARCHAR(10), " +
+                "IMAGE VARCHAR(200))";
+        db.execSQL(productTable);
+
+        String cartTable = "CREATE TABLE IF NOT EXISTS cart (cartId INTEGER PRIMARY KEY AUTOINCREMENT, productId VARCHAR(10), userId VARCHAR(10), qty VARCHAR(5) )";
+        db.execSQL(cartTable);
+
+
 
         sp = getSharedPreferences(ConstantSp.PREF, MODE_PRIVATE);
 
@@ -46,6 +72,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         cart = findViewById(R.id.product_detail_cart);
         cart_layout = findViewById(R.id.product_detail_cart_layout);
         minus = findViewById(R.id.product_detail_cart_minus);
+        plus = findViewById(R.id.product_detail_cart_add);
+        cartQty = findViewById(R.id.product_detail_cart_qty);
 
 
 
@@ -66,6 +94,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         cart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                qty=1;
+                String insertItem = "INSERT INTO cart VALUES(NULL,'"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"', '"+sp.getString(ConstantSp.USERID,"")+"', '"+qty+"')";
+                db.execSQL(insertItem);
+
                 cart.setVisibility(GONE);
                 cart_layout.setVisibility(VISIBLE);
                 Toast.makeText(ProductDetailActivity.this, "Added To Cart", Toast.LENGTH_LONG).show();
@@ -75,9 +108,25 @@ public class ProductDetailActivity extends AppCompatActivity {
         minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cart.setVisibility(VISIBLE);
-                cart_layout.setVisibility(GONE);
-                Toast.makeText(ProductDetailActivity.this, "Removed From Cart", Toast.LENGTH_LONG).show();
+                qty--;
+                if(qty==0){
+                    cart.setVisibility(VISIBLE);
+                    cart_layout.setVisibility(GONE);
+                    Toast.makeText(ProductDetailActivity.this, "Removed From Cart", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    cartQty.setText(String.valueOf(qty));
+                }
+            }
+        });
+
+
+        plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                qty++;
+                cartQty.setText(String.valueOf(qty));
+
             }
         });
 
