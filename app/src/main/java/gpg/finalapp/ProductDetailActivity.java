@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
 import android.media.Image;
@@ -93,18 +94,28 @@ public class ProductDetailActivity extends AppCompatActivity {
         originalPrice.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
 
+        checkItemInCart();
+
+
 
         cart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                qty=1;
-                String insertItem = "INSERT INTO cart VALUES(NULL,'"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"', '"+sp.getString(ConstantSp.USERID,"")+"', '"+qty+"')";
-                db.execSQL(insertItem);
+                String checkItem = "SELECT * FROM cart WHERE " +
+                        "productId = '"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"' AND " +
+                        "userId = '"+sp.getString(ConstantSp.USERID,"")+"'";
+                Cursor cursor = db.rawQuery(checkItem,null);
 
-                cart.setVisibility(GONE);
-                cart_layout.setVisibility(VISIBLE);
-                Toast.makeText(ProductDetailActivity.this, "Added To Cart", Toast.LENGTH_LONG).show();
+                if(cursor.getCount() == 0){
+                    qty=1;
+                    String insertItem = "INSERT INTO cart VALUES(NULL,'"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"', '"+sp.getString(ConstantSp.USERID,"")+"', '"+qty+"')";
+                    db.execSQL(insertItem);
+
+                    cart.setVisibility(GONE);
+                    cart_layout.setVisibility(VISIBLE);
+                    Toast.makeText(ProductDetailActivity.this, "Added To Cart", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -143,5 +154,27 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void checkItemInCart() {
+        String checkItem = "SELECT * FROM cart WHERE " +
+                "productId = '"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"' AND " +
+                "userId = '"+sp.getString(ConstantSp.USERID,"")+"'";
+        Cursor cursor = db.rawQuery(checkItem,null);
+
+        if(cursor.getCount()>0){
+            while (cursor.moveToNext()){
+                qty = Integer.parseInt(cursor.getString(3));
+                cartQty.setText(String.valueOf(qty));
+            }
+
+            cart.setVisibility(GONE);
+            cart_layout.setVisibility(VISIBLE);
+
+        }
+        else{
+            cart.setVisibility(VISIBLE);
+            cart_layout.setVisibility(GONE);
+        }
     }
 }

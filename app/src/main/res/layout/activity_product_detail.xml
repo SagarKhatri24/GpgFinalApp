@@ -73,6 +73,23 @@
                 >
 
                 <ImageView
+                    android:id="@+id/product_detail_wishlist_empty"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:src="@drawable/wishlist_empty"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    />
+
+                <ImageView
+                    android:id="@+id/product_detail_wishlist_fill"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:src="@drawable/wishlist_fill"
+                    android:visibility="gone"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    />
+
+                <ImageView
                     android:id="@+id/product_detail_cart"
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"

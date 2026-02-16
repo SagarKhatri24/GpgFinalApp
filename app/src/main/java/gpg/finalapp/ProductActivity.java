@@ -95,7 +95,6 @@ public class ProductActivity extends AppCompatActivity {
                         " '"+vendorNameArray[i]+"', '"+productNameArray[i]+"'," +
                         " '"+originalPriceArray[i]+"', '"+discountedPriceArray[i]+"', " +
                         "'"+discountArray[i]+"', '"+imageArray[i]+"' )";
-
                 db.execSQL(insertProduct);
             }
         }
