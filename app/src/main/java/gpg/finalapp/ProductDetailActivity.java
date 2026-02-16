@@ -25,7 +25,7 @@ import com.bumptech.glide.Glide;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
-    ImageView productImage, cart, minus, plus;
+    ImageView productImage, cart, minus, plus, wishlistEmpty, wishlistFill;
     TextView productName, vendorName, originalPrice, discountedPrice, discount, cartQty;
     LinearLayout cart_layout;
 
@@ -78,6 +78,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         minus = findViewById(R.id.product_detail_cart_minus);
         plus = findViewById(R.id.product_detail_cart_add);
         cartQty = findViewById(R.id.product_detail_cart_qty);
+
+        wishlistEmpty = findViewById(R.id.product_detail_wishlist_empty);
+        wishlistFill = findViewById(R.id.product_detail_wishlist_fill);
 
 
 
@@ -154,7 +157,36 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+        wishlistEmpty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                wishlistEmpty.setVisibility(GONE);
+                wishlistFill.setVisibility(VISIBLE);
+                Toast.makeText(ProductDetailActivity.this, "Added to wishlist", Toast.LENGTH_SHORT).show();;
+            }
+        });
+
+        wishlistFill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                wishlistEmpty.setVisibility(VISIBLE);
+                wishlistFill.setVisibility(GONE);
+                Toast.makeText(ProductDetailActivity.this, "Removed from wishlist", Toast.LENGTH_SHORT).show();;
+            }
+        });
+
+
+
+
     }
+
+
+
+
+
 
     private void checkItemInCart() {
         String checkItem = "SELECT * FROM cart WHERE " +
