@@ -104,7 +104,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
 
         checkItemInCart();
-//        checkItemInWishlist();
+        checkItemInWishlist();
 
 
 
@@ -202,11 +202,19 @@ public class ProductDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(isWishlist){
                     isWishlist = false;
+
+                    String removeFromWishlist = "DELETE FROM wishlist WHERE productId = '"+sp.getInt(ConstantSp.PRODUCT_ID, 0)+"' AND userId = '"+sp.getString(ConstantSp.USERID, "")+"'";
+                    db.execSQL(removeFromWishlist);
+
                     wishlist.setImageResource(R.drawable.wishlist_empty);
                     Toast.makeText(ProductDetailActivity.this, "Removed from wishlist", Toast.LENGTH_SHORT).show();;
                 }
                 else{
                     isWishlist = true;
+
+                    String insertInWishlist = "INSERT INTO wishlist VALUES(NULL, '"+sp.getInt(ConstantSp.PRODUCT_ID, 0)+"', '"+sp.getString(ConstantSp.USERID, "")+"')";
+                    db.execSQL(insertInWishlist);
+
                     wishlist.setImageResource(R.drawable.wishlist_fill);
                     Toast.makeText(ProductDetailActivity.this, "Added to wishlist", Toast.LENGTH_SHORT).show();;
                 }
@@ -215,7 +223,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
 
     }
-
+//
 //    private void checkItemInWishlist() {
 //        String checkItem = "SELECT * FROM wishlist WHERE " +
 //                "productId = '"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"' AND " +
@@ -231,6 +239,28 @@ public class ProductDetailActivity extends AppCompatActivity {
 //            wishlistFill.setVisibility(GONE);
 //        }
 //    }
+
+
+
+
+
+    private void checkItemInWishlist() {
+        String checkItem = "SELECT * FROM wishlist WHERE " +
+                "productId = '"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"' AND " +
+                "userId = '"+sp.getString(ConstantSp.USERID,"")+"'";
+        Cursor cursor = db.rawQuery(checkItem,null);
+
+        if(cursor.getCount() > 0){
+            isWishlist = true;
+            wishlist.setImageResource(R.drawable.wishlist_fill);
+        }
+        else{
+            isWishlist = false;
+            wishlist.setImageResource(R.drawable.wishlist_empty);
+        }
+    }
+
+
 
 
     private void checkItemInCart() {
