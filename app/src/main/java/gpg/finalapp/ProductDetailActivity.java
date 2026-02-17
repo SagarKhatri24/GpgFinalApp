@@ -25,7 +25,7 @@ import com.bumptech.glide.Glide;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
-    ImageView productImage, cart, minus, plus, wishlistEmpty, wishlistFill;
+    ImageView productImage, cart, minus, plus, wishlistEmpty, wishlistFill, wishlist;
     TextView productName, vendorName, originalPrice, discountedPrice, discount, cartQty;
     LinearLayout cart_layout;
 
@@ -34,6 +34,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     SQLiteDatabase db;
 
     int qty = 0;
+
+    boolean isWishlist = false;
 
 
 
@@ -61,6 +63,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         String cartTable = "CREATE TABLE IF NOT EXISTS cart (cartId INTEGER PRIMARY KEY AUTOINCREMENT, productId VARCHAR(10), userId VARCHAR(10), qty VARCHAR(5) )";
         db.execSQL(cartTable);
 
+        String wishlistTable = "CREATE TABLE IF NOT EXISTS wishlist(wishlistId INTEGER PRIMARY KEY AUTOINCREMENT, productId VARCHAR(10), userId VARCHAR(10))";
+        db.execSQL(wishlistTable);
+
 
 
 
@@ -79,8 +84,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         plus = findViewById(R.id.product_detail_cart_add);
         cartQty = findViewById(R.id.product_detail_cart_qty);
 
-        wishlistEmpty = findViewById(R.id.product_detail_wishlist_empty);
-        wishlistFill = findViewById(R.id.product_detail_wishlist_fill);
+//        wishlistEmpty = findViewById(R.id.product_detail_wishlist_empty);
+//        wishlistFill = findViewById(R.id.product_detail_wishlist_fill);
+        wishlist = findViewById(R.id.product_detail_wishlist);
 
 
 
@@ -98,6 +104,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
 
         checkItemInCart();
+//        checkItemInWishlist();
 
 
 
@@ -160,32 +167,70 @@ public class ProductDetailActivity extends AppCompatActivity {
 
 
 
-        wishlistEmpty.setOnClickListener(new View.OnClickListener() {
+//        wishlistEmpty.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                wishlistEmpty.setVisibility(GONE);
+//                wishlistFill.setVisibility(VISIBLE);
+//
+//                String insertInWishlist = "INSERT INTO wishlist VALUES(NULL, '"+sp.getInt(ConstantSp.PRODUCT_ID, 0)+"', '"+sp.getString(ConstantSp.USERID, "")+"')";
+//                db.execSQL(insertInWishlist);
+//
+//                Toast.makeText(ProductDetailActivity.this, "Added to wishlist", Toast.LENGTH_SHORT).show();;
+//            }
+//        });
+//
+//        wishlistFill.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                wishlistEmpty.setVisibility(VISIBLE);
+//                wishlistFill.setVisibility(GONE);
+//
+//                String removeFromWishlist = "DELETE FROM wishlist WHERE productId = '"+sp.getInt(ConstantSp.PRODUCT_ID, 0)+"' AND userId = '"+sp.getString(ConstantSp.USERID, "")+"'";
+//                db.execSQL(removeFromWishlist);
+//
+//                Toast.makeText(ProductDetailActivity.this, "Removed from wishlist", Toast.LENGTH_SHORT).show();;
+//
+//            }
+//        });
+
+
+
+
+        wishlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                wishlistEmpty.setVisibility(GONE);
-                wishlistFill.setVisibility(VISIBLE);
-                Toast.makeText(ProductDetailActivity.this, "Added to wishlist", Toast.LENGTH_SHORT).show();;
+                if(isWishlist){
+                    isWishlist = false;
+                    wishlist.setImageResource(R.drawable.wishlist_empty);
+                    Toast.makeText(ProductDetailActivity.this, "Removed from wishlist", Toast.LENGTH_SHORT).show();;
+                }
+                else{
+                    isWishlist = true;
+                    wishlist.setImageResource(R.drawable.wishlist_fill);
+                    Toast.makeText(ProductDetailActivity.this, "Added to wishlist", Toast.LENGTH_SHORT).show();;
+                }
             }
         });
-
-        wishlistFill.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                wishlistEmpty.setVisibility(VISIBLE);
-                wishlistFill.setVisibility(GONE);
-                Toast.makeText(ProductDetailActivity.this, "Removed from wishlist", Toast.LENGTH_SHORT).show();;
-            }
-        });
-
-
 
 
     }
 
-
-
-
+//    private void checkItemInWishlist() {
+//        String checkItem = "SELECT * FROM wishlist WHERE " +
+//                "productId = '"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"' AND " +
+//                "userId = '"+sp.getString(ConstantSp.USERID,"")+"'";
+//        Cursor cursor = db.rawQuery(checkItem,null);
+//
+//        if(cursor.getCount() > 0){
+//            wishlistEmpty.setVisibility(GONE);
+//            wishlistFill.setVisibility(VISIBLE);
+//        }
+//        else{
+//            wishlistEmpty.setVisibility(VISIBLE);
+//            wishlistFill.setVisibility(GONE);
+//        }
+//    }
 
 
     private void checkItemInCart() {
