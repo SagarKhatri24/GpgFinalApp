@@ -119,7 +119,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
                 if(cursor.getCount() == 0){
                     qty=1;
-                    String insertItem = "INSERT INTO cart VALUES(NULL,'"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"', '"+sp.getString(ConstantSp.USERID,"")+"', '"+qty+"')";
+                        String insertItem = "INSERT INTO cart VALUES(NULL,'"+sp.getInt(ConstantSp.PRODUCT_ID,0)+"', '"+sp.getString(ConstantSp.USERID,"")+"', '"+qty+"')";
                     db.execSQL(insertItem);
 
                     cart.setVisibility(GONE);
