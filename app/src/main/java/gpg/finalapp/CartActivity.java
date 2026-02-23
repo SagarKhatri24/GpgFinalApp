@@ -67,6 +67,7 @@ public class CartActivity extends AppCompatActivity {
             while(cursor.moveToNext()){
                 CartList list = new CartList();
                 list.setQty(cursor.getInt(3));
+                list.setCartId(cursor.getInt(0));
 
                 String checkProduct = "SELECT * FROM PRODUCT WHERE PRODUCTID = '"+cursor.getString(1)+"'";
                 Cursor productCursor = db.rawQuery(checkProduct, null);

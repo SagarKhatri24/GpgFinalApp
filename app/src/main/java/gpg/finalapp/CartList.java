@@ -1,18 +1,9 @@
 package gpg.finalapp;
 
 public class CartList {
-    int productId, qty;
+    int productId, qty, cartId;
     String productName;
     String vendorName;
-    String image;
-
-    public String getOriginalPrice() {
-        return originalPrice;
-    }
-
-    public void setOriginalPrice(String originalPrice) {
-        this.originalPrice = originalPrice;
-    }
 
     public int getProductId() {
         return productId;
@@ -28,6 +19,14 @@ public class CartList {
 
     public void setQty(int qty) {
         this.qty = qty;
+    }
+
+    public int getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(int cartId) {
+        this.cartId = cartId;
     }
 
     public String getProductName() {
@@ -54,6 +53,14 @@ public class CartList {
         this.image = image;
     }
 
+    public String getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(String originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
     public String getDiscountPrice() {
         return discountPrice;
     }
@@ -70,6 +77,7 @@ public class CartList {
         this.discount = discount;
     }
 
+    String image;
     String originalPrice;
     String discountPrice;
     String discount;

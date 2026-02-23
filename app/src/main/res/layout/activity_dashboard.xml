@@ -44,4 +44,10 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:text="Category RecyclerView" />
 
+    <Button
+        android:id="@+id/dashboard_cart"
+        style="@style/button_15"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:text="Cart" />
+
 </LinearLayout>
