@@ -3,6 +3,7 @@ package gpg.finalapp;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyHolder> {
 
     public class MyHolder extends RecyclerView.ViewHolder {
         ImageView productImage, delete;
-        TextView productName, vendorName, originalPrice, discountedPrice, discount;
+        TextView productName, vendorName, originalPrice, discountedPrice, discount, qty;
         public MyHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -48,6 +49,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyHolder> {
             originalPrice = itemView.findViewById(R.id.custom_cart_original_price);
             discountedPrice = itemView.findViewById(R.id.custom_cart_discount_price);
             discount = itemView.findViewById(R.id.custom_cart_discount);
+            qty = itemView.findViewById(R.id.custom_cart_qty);
 
         }
     }
@@ -59,6 +61,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyHolder> {
         holder.originalPrice.setText("₹"+arrayList.get(position).getOriginalPrice());
         holder.discountedPrice.setText("₹"+arrayList.get(position).getDiscountPrice());
         holder.discount.setText(arrayList.get(position).getDiscount()+"%");
+
+        Log.d("TAG", "onBindViewHolder: "+arrayList.get(position).getQty()+"");
+
+        holder.qty.setText(String.valueOf(arrayList.get(position).getQty()));
 
         holder.originalPrice.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 //        holder.image.setImageResource(Integer.parseInt(arrayList.get(position).getImage()));
@@ -73,14 +79,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyHolder> {
                 notifyDataSetChanged();
             }
         });
-
-
     }
 
     @Override
     public int getItemCount() {
         return arrayList.size();
     }
-
-
 }
