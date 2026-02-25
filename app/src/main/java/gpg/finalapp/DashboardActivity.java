@@ -23,7 +23,7 @@ public class DashboardActivity extends AppCompatActivity {
     SharedPreferences sp;
     SQLiteDatabase db;
 
-    Button profile,logout,deleteProfile,categoryList,categoryRecycler, cart;
+    Button profile,logout,deleteProfile,categoryList,categoryRecycler, cart, wishlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +51,17 @@ public class DashboardActivity extends AppCompatActivity {
         categoryList = findViewById(R.id.dashboard_category_list);
         categoryRecycler = findViewById(R.id.dashboard_category_recycler);
         cart = findViewById(R.id.dashboard_cart);
+        wishlist = findViewById(R.id.dashboard_wishlist);
 
 
 
+        wishlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DashboardActivity.this, WishlistActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         cart.setOnClickListener(new View.OnClickListener() {

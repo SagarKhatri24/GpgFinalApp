@@ -50,4 +50,10 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:text="Cart" />
 
+    <Button
+        android:id="@+id/dashboard_wishlist"
+        style="@style/button_15"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:text="Wishlist" />
+
 </LinearLayout>

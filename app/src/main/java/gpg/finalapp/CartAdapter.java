@@ -37,8 +37,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyHolder> {
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
-        ImageView productImage, delete;
+        ImageView productImage, delete, plus, minus;
         TextView productName, vendorName, originalPrice, discountedPrice, discount, qty;
+        int itemQty;
         public MyHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -50,6 +51,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyHolder> {
             discountedPrice = itemView.findViewById(R.id.custom_cart_discount_price);
             discount = itemView.findViewById(R.id.custom_cart_discount);
             qty = itemView.findViewById(R.id.custom_cart_qty);
+            plus = itemView.findViewById(R.id.custom_cart_plus);
+            minus = itemView.findViewById(R.id.custom_cart_minus);
 
         }
     }
@@ -65,6 +68,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyHolder> {
         Log.d("TAG", "onBindViewHolder: "+arrayList.get(position).getQty()+"");
 
         holder.qty.setText(String.valueOf(arrayList.get(position).getQty()));
+        holder.itemQty = arrayList.get(position).getQty();
 
         holder.originalPrice.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 //        holder.image.setImageResource(Integer.parseInt(arrayList.get(position).getImage()));
@@ -77,6 +81,38 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyHolder> {
                 db.execSQL(deleteItem);
                 arrayList.remove(position);
                 notifyDataSetChanged();
+            }
+        });
+
+        holder.plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.itemQty++;
+                holder.qty.setText(String.valueOf(holder.itemQty));
+                String updateCart = "UPDATE cart SET qty = '"+holder.itemQty+"' WHERE cartId = '"+arrayList.get(position).getCartId()+"'";
+                db.execSQL(updateCart);
+                arrayList.get(position).setQty(holder.itemQty);
+                notifyDataSetChanged();
+            }
+        });
+
+        holder.minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.itemQty--;
+                if(holder.itemQty == 0){
+                    String deleteItem = "DELETE FROM cart WHERE cartId='"+arrayList.get(position).getCartId()+"'";
+                    db.execSQL(deleteItem);
+                    arrayList.remove(position);
+                    notifyDataSetChanged();
+                }
+                else{
+                    holder.qty.setText(String.valueOf(holder.itemQty));
+                    String updateCart = "UPDATE cart SET qty = '"+holder.itemQty+"' WHERE cartId = '"+arrayList.get(position).getCartId()+"'";
+                    db.execSQL(updateCart);
+                    arrayList.get(position).setQty(holder.itemQty);
+                    notifyDataSetChanged();
+                }
             }
         });
     }
