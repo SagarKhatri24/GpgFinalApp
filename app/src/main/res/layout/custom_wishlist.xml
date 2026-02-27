@@ -30,7 +30,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/custom_cart_name"
+                    android:id="@+id/custom_wishlist_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/_10sdp"
@@ -52,7 +52,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/custom_cart_vendor_name"
+                android:id="@+id/custom_wishlist_vendor_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Vendor name"
@@ -66,7 +66,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/custom_cart_original_price"
+                    android:id="@+id/custom_wishlist_original_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Original Price"
@@ -74,7 +74,7 @@
                     android:textSize="@dimen/_10sdp"
                     />
                 <TextView
-                    android:id="@+id/custom_cart_discount_price"
+                    android:id="@+id/custom_wishlist_discount_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Discounted Price"
@@ -83,7 +83,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/custom_cart_discount"
+                    android:id="@+id/custom_wishlist_discount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Discounted percentage"

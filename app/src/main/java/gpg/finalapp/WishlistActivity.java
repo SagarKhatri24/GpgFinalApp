@@ -1,6 +1,7 @@
 package gpg.finalapp;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -53,6 +54,28 @@ public class WishlistActivity extends AppCompatActivity {
 
         wishlist_recycler = findViewById(R.id.wishlist_recyclerview);
         wishlist_recycler.setLayoutManager(new LinearLayoutManager(WishlistActivity.this));
+
+        arrayList = new ArrayList<WishlistList>();
+
+        String checkWishlist = "SELECT * FROM wishlist WHERE userId = '"+sp.getString(ConstantSp.USERID,"")+"'";
+        Cursor cursor = db.rawQuery(checkWishlist, null);
+        if(cursor.getCount()>0){
+            while(cursor.moveToNext()){
+                WishlistList list = new WishlistList();
+                list.setWishlistId(cursor.getInt(0));
+                String checkProduct = "SELECT * FROM PRODUCT WHERE PRODUCTID = '"+cursor.getString(1)+"'";
+                Cursor productCursor = db.rawQuery(checkProduct, null);
+                while(productCursor.moveToNext()){
+                    list.setProductName(productCursor.getString(3));
+                    list.setProductVendorName(productCursor.getString(2));
+                    list.setProductOriginalPrice(productCursor.getString(4));
+                    list.setProductDiscountedPrice(productCursor.getString(5));
+                    list.setDiscount(productCursor.getString(6));
+                    list.setProductImage(productCursor.getString(7));
+                }
+                arrayList.add(list);
+            }
+        }
 
         WishlistAdapter adapter = new WishlistAdapter(WishlistActivity.this, arrayList, db);
         wishlist_recycler.setAdapter(adapter);

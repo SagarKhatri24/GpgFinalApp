@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.session.PlaybackState;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,14 @@ public class CartActivity extends AppCompatActivity {
     SharedPreferences sp;
 
     ArrayList<CartList> arrayList;
+
+    TextView cartTotal;
+
+    int cartTotalAmount = 0;
+
+    int itemPice = 0;
+    int itemQty = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +65,7 @@ public class CartActivity extends AppCompatActivity {
         sp = getSharedPreferences(ConstantSp.PREF, MODE_PRIVATE);
 
         cart_recycler = findViewById(R.id.cart_recyclerview);
+        cartTotal = findViewById(R.id.cart_total);
 
         cart_recycler.setLayoutManager(new LinearLayoutManager(CartActivity.this));
 
@@ -67,6 +77,7 @@ public class CartActivity extends AppCompatActivity {
             while(cursor.moveToNext()){
                 CartList list = new CartList();
                 list.setQty(cursor.getInt(3));
+                itemQty = cursor.getInt(3);
                 list.setCartId(cursor.getInt(0));
 
                 String checkProduct = "SELECT * FROM PRODUCT WHERE PRODUCTID = '"+cursor.getString(1)+"'";
@@ -78,12 +89,16 @@ public class CartActivity extends AppCompatActivity {
                     list.setVendorName(productCursor.getString(2));
                     list.setOriginalPrice(productCursor.getString(4));
                     list.setDiscountPrice(productCursor.getString(5));
+                    itemPice = Integer.parseInt(productCursor.getString(5));
                     list.setDiscount(productCursor.getString(6));
                     list.setImage(productCursor.getString(7));
                 }
+                cartTotalAmount = cartTotalAmount + (itemPice * itemQty);
                 arrayList.add(list);
             }
         }
+
+        cartTotal.setText(ConstantSp.rupee_symbol+String.valueOf(cartTotalAmount));
 
         CartAdapter adapter = new CartAdapter(CartActivity.this, arrayList, db);
         cart_recycler.setAdapter(adapter);

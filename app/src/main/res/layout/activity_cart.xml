@@ -13,4 +13,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        >
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:elevation="@dimen/_5sdp"
+            app:cardCornerRadius="@dimen/_5sdp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/text_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cart Total: "
+                    android:layout_margin="@dimen/_15sdp"
+                    />
+
+                <TextView
+                    android:id="@+id/cart_total"
+                    style="@style/text_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10000"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="@dimen/_15sdp"
+                    />
+
+
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+    </RelativeLayout>
+
 </RelativeLayout>

@@ -22,6 +22,9 @@ public class ConstantSp {
     public static String discount = "DISCOUNT";
     public static String product_image = "PRODUCTIMAGE";
 
+    public static String rupee_symbol = "₹";
+
+
 
 
 
