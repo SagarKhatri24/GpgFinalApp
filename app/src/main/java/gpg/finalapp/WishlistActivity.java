@@ -54,6 +54,9 @@ public class WishlistActivity extends AppCompatActivity {
         wishlist_recycler = findViewById(R.id.wishlist_recyclerview);
         wishlist_recycler.setLayoutManager(new LinearLayoutManager(WishlistActivity.this));
 
+        WishlistAdapter adapter = new WishlistAdapter(WishlistActivity.this, arrayList, db);
+        wishlist_recycler.setAdapter(adapter);
+
 
     }
 }
