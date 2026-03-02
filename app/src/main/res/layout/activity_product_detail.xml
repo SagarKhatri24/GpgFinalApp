@@ -144,6 +144,16 @@
 
             </LinearLayout>
 
+
+            <Button
+                android:id="@+id/buy_now"
+                style="@style/button_15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Buy Now"
+
+                />
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

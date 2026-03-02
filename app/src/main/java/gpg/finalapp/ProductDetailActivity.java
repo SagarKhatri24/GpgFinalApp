@@ -3,13 +3,16 @@ package gpg.finalapp;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,12 +25,18 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
 
-public class ProductDetailActivity extends AppCompatActivity {
+import org.json.JSONObject;
+
+public class ProductDetailActivity extends AppCompatActivity implements PaymentResultWithDataListener {
 
     ImageView productImage, cart, minus, plus, wishlistEmpty, wishlistFill, wishlist;
     TextView productName, vendorName, originalPrice, discountedPrice, discount, cartQty;
     LinearLayout cart_layout;
+    Button buy_now;
 
     SharedPreferences sp;
 
@@ -87,6 +96,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 //        wishlistEmpty = findViewById(R.id.product_detail_wishlist_empty);
 //        wishlistFill = findViewById(R.id.product_detail_wishlist_fill);
         wishlist = findViewById(R.id.product_detail_wishlist);
+
+        buy_now = findViewById(R.id.buy_now);
 
 
 
@@ -222,7 +233,61 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
 
+
+        buy_now.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startpayment();
+            }
+        });
+
+
     }
+
+    private void startpayment() {
+        final Activity activity = this;
+        Checkout checkout = new Checkout();
+        checkout.setKeyID("rzp_test_xsiOz9lYtWKHgF");
+
+        try {
+            JSONObject options = new JSONObject();
+            options.put("name", getResources().getString(R.string.app_name));
+            options.put("description", "Purchase Deal From " + getResources().getString(R.string.app_name));
+            options.put("send_sms_hash", true);
+            options.put("allow_rotation", true);
+            //You can omit the image option to fetch the image from dashboard
+            options.put("image", R.mipmap.ic_launcher);
+            options.put("currency", "INR");
+            options.put("amount", String.valueOf(Integer.parseInt(sp.getString(ConstantSp.discountedPrice,"")) * 100));
+
+            JSONObject preFill = new JSONObject();
+            preFill.put("email", "khatrisagar2@gmail.com");
+            preFill.put("contact", "7878232386");
+            options.put("prefill", preFill);
+
+            checkout.open(activity, options);
+
+        } catch(Exception e) {
+            Log.e("RESPONSE", "Error in starting Razorpay Checkout", e);
+        }
+    }
+
+
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+        Toast.makeText(this, "Payment Sucessfull", Toast.LENGTH_SHORT).show();
+        Log.d("RESPONSE_SUCCESS","Transaction Id : "+s);
+
+    }
+
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+        Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
+        Log.d("RESPONSE_SUCCESS","Transaction Id : "+s);
+
+    }
+
+
 //
 //    private void checkItemInWishlist() {
 //        String checkItem = "SELECT * FROM wishlist WHERE " +
