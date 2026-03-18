@@ -1,8 +1,11 @@
 package gpg.finalapp;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +29,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -43,6 +50,8 @@ public class SignupActivity extends AppCompatActivity {
     ArrayList<String> cityArray;
     String sCity = ""; //Vadodara
     SQLiteDatabase db;
+
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,24 +183,73 @@ public class SignupActivity extends AppCompatActivity {
                         Toast.makeText(SignupActivity.this, "User Already Exists", Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        //String insertQuery = "INSERT INTO USERS VALUES (NULL,'John')";
-                        String insertQuery = "INSERT INTO USERS VALUES (NULL,'"+name.getText().toString()+"','"+email.getText().toString()+"','"+contact.getText().toString()+"','"+password.getText().toString()+"','"+sGender+"','"+sCity+"')";
-                        Log.d("INSERTQUERY",insertQuery);
-                        db.execSQL(insertQuery);
+//                        //String insertQuery = "INSERT INTO USERS VALUES (NULL,'John')";
+//                        String insertQuery = "INSERT INTO USERS VALUES (NULL,'"+name.getText().toString()+"','"+email.getText().toString()+"','"+contact.getText().toString()+"','"+password.getText().toString()+"','"+sGender+"','"+sCity+"')";
+//                        Log.d("INSERTQUERY",insertQuery);
+//                        db.execSQL(insertQuery);
+//
+//                        System.out.println("Signup Successfully");
+//                        Log.d("LOGIN", "Signup Successfully");
+//                        Log.e("LOGIN", "Signup Successfully");
+//                        Log.w("LOGIN", "Signup Successfully");
+//
+//                        Toast.makeText(SignupActivity.this, "Signup Successfully", Toast.LENGTH_SHORT).show();
+//                        Snackbar.make(view, "Signup Successfully", Snackbar.LENGTH_LONG).show();
+//
+//                        onBackPressed();
 
-                        System.out.println("Signup Successfully");
-                        Log.d("LOGIN", "Signup Successfully");
-                        Log.e("LOGIN", "Signup Successfully");
-                        Log.w("LOGIN", "Signup Successfully");
-
-                        Toast.makeText(SignupActivity.this, "Signup Successfully", Toast.LENGTH_SHORT).show();
-                        Snackbar.make(view, "Signup Successfully", Snackbar.LENGTH_LONG).show();
-
-                        onBackPressed();
+                        if(new ConnectionDetector(SignupActivity.this).isConnectingToInternet()){
+                            new SignupTask().execute();
+                        }
                     }
                 }
             }
         });
+    }
 
+    private class SignupTask extends AsyncTask<Void, Void, String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(SignupActivity.this);
+            pd.setMessage("Please Wait...");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @SuppressLint("WrongThread")
+        @Override
+        protected String doInBackground(Void... voids) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("name", name.getText().toString());
+            map.put("email", email.getText().toString());
+            map.put("contact", contact.getText().toString());
+            map.put("password", password.getText().toString());
+            map.put("gender", sGender);
+            map.put("city", sCity);
+            return new MakeServiceCall().MakeServiceCall(ConstantSp.URL+"signup.php", MakeServiceCall.POST,map);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(pd != null & pd.isShowing()){
+                pd.dismiss();
+            }
+
+            try {
+                JSONObject object = new JSONObject(s);
+                new CommonMethod(SignupActivity.this, object.getString("Message"));
+                if(object.getBoolean("Status")){
+                    onBackPressed();
+                }
+            }
+            catch (JSONException e) {
+                new CommonMethod(SignupActivity.this, e.getMessage());
+                Log.d("JSON_ERROR", e.getMessage());
+            }
+        }
     }
 }
