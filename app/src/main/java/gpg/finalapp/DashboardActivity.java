@@ -1,11 +1,14 @@
 package gpg.finalapp;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +20,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 public class DashboardActivity extends AppCompatActivity {
 
     TextView title;
@@ -24,6 +32,8 @@ public class DashboardActivity extends AppCompatActivity {
     SQLiteDatabase db;
 
     Button profile,logout,deleteProfile,categoryList,categoryRecycler, cart, wishlist;
+
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,10 +158,16 @@ public class DashboardActivity extends AppCompatActivity {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String deleteQuery = "DELETE FROM USERS WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
-                        db.execSQL(deleteQuery);
-                        Toast.makeText(DashboardActivity.this, "Account Deleted Successfully", Toast.LENGTH_SHORT).show();
-                        doLogout();
+//                        String deleteQuery = "DELETE FROM USERS WHERE USERID='"+sp.getString(ConstantSp.USERID,"")+"'";
+//                        db.execSQL(deleteQuery);
+//                        Toast.makeText(DashboardActivity.this, "Account Deleted Successfully", Toast.LENGTH_SHORT).show();
+//                        doLogout();
+                        if(new ConnectionDetector(DashboardActivity.this).isConnectingToInternet()){
+                            new DeleteTask().execute();
+                        }
+                        else{
+                            new ConnectionDetector(DashboardActivity.this).connectiondetect();
+                        }
                     }
                 });
 
@@ -173,5 +189,50 @@ public class DashboardActivity extends AppCompatActivity {
         Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+
+
+    private class DeleteTask extends AsyncTask<Void, Void, String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(DashboardActivity.this);
+            pd.setMessage("Please Wait...");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("userid", sp.getString(ConstantSp.USERID,""));
+            return new MakeServiceCall().MakeServiceCall(ConstantSp.URL+"deleteProfile.php", MakeServiceCall.POST,map);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(pd != null & pd.isShowing()){
+                pd.dismiss();
+            }
+
+            try {
+                JSONObject object = new JSONObject(s);
+                new CommonMethod(DashboardActivity.this, object.getString("Message"));
+                if(object.getBoolean("Status")){
+                    sp.edit().clear().commit();
+                    Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+            catch (JSONException e) {
+                new CommonMethod(DashboardActivity.this, e.getMessage());
+                Log.d("JSON_ERROR", e.getMessage());
+            }
+        }
+
     }
 }

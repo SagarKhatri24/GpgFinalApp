@@ -2,7 +2,7 @@ package gpg.finalapp;
 
 public class ConstantSp {
 
-    public static String URL = "http://192.168.1.13/FinalGpgApp/";
+    public static String URL = "http://192.168.1.3/FinalGpgApp/";
 
     public static String PREF = "pref";
 
