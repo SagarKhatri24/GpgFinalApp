@@ -29,6 +29,10 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     Button login;
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
     ProgressDialog pd;
 
+    ApiInterface apiInterface;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
         sp = getSharedPreferences(ConstantSp.PREF,MODE_PRIVATE);
 
@@ -121,8 +129,25 @@ public class MainActivity extends AppCompatActivity {
 //                        Toast.makeText(MainActivity.this, "Login Unsuccessfully", Toast.LENGTH_SHORT).show();
 //                    }
 
+
+
+//                    if(new ConnectionDetector(MainActivity.this).isConnectingToInternet()){
+//                        new LoginTask().execute();
+//                    }
+//                    else{
+//                        new ConnectionDetector(MainActivity.this).connectiondetect();
+//                    }
+
+
+
+
                     if(new ConnectionDetector(MainActivity.this).isConnectingToInternet()){
-                        new LoginTask().execute();
+                        pd = new ProgressDialog(MainActivity.this);
+                        pd.setMessage("Please Wait...");
+                        pd.setCancelable(false);
+                        pd.show();
+
+                        doRetrofitLogin();
                     }
                     else{
                         new ConnectionDetector(MainActivity.this).connectiondetect();
@@ -133,6 +158,65 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void doRetrofitLogin() {
+        Call<GetLoginData> call = apiInterface.getLoginData(
+                email.getText().toString(),
+                password.getText().toString()
+        );
+        call.enqueue(new Callback<GetLoginData>() {
+            @Override
+            public void onResponse(Call<GetLoginData> call, Response<GetLoginData> response) {
+                pd.dismiss();
+                if(response.code() == 200){
+                    if(response.body().status) {
+
+                        try {
+                            GetLoginData.UserData user = response.body().userData.get(0);
+
+                            String userid = user.userid;
+                            String name = user.name;
+                            String email = user.email;
+                            String contact = user.contact;
+                            String password = user.password;
+                            String gender = user.gender;
+                            String city = user.city;
+
+
+                            sp.edit().putString(ConstantSp.USERID, userid).commit();
+                            sp.edit().putString(ConstantSp.NAME, name).commit();
+                            sp.edit().putString(ConstantSp.EMAIL, email).commit();
+                            sp.edit().putString(ConstantSp.CONTACT, contact).commit();
+                            sp.edit().putString(ConstantSp.PASSWORD, password).commit();
+                            sp.edit().putString(ConstantSp.GENDER, gender).commit();
+                            sp.edit().putString(ConstantSp.CITY, city).commit();
+
+
+                            new CommonMethod(MainActivity.this, response.body().message);
+
+                            Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+                            startActivity(intent);
+                            finish();
+
+
+                        }
+                        catch (Exception e) {
+                            new CommonMethod(MainActivity.this, e.getMessage());
+                            Log.d("JSON_ERROR", e.getMessage());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetLoginData> call, Throwable t) {
+                pd.dismiss();
+                new CommonMethod(MainActivity.this,t.getMessage());
+                Log.d("RESPONSE",t.getMessage());
+            }
+
+        });
     }
 
     private class LoginTask extends AsyncTask<Void, Void, String>{
