@@ -30,4 +30,12 @@ public interface ApiInterface {
             @Field("password") String password
     );
 
+
+
+    @FormUrlEncoded
+    @POST("deleteProfile.php")
+    Call<GetSignupData> getDeleteData(
+            @Field("userid") String userid
+    );
+
 }

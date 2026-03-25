@@ -20,10 +20,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.maps.model.Dash;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -35,6 +41,9 @@ public class DashboardActivity extends AppCompatActivity {
 
     ProgressDialog pd;
 
+    ApiInterface apiInterface;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +54,8 @@ public class DashboardActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
         db = openOrCreateDatabase("GpgApp.db",MODE_PRIVATE,null);
         String tableQuery = "CREATE TABLE IF NOT EXISTS USERS(USERID INTEGER PRIMARY KEY AUTOINCREMENT,NAME VARCHAR(100),EMAIL VARCHAR(50),CONTACT BIGINT(10),PASSWORD VARCHAR(20),GENDER VARCHAR(10),CITY VARCHAR(20))";
@@ -162,8 +173,24 @@ public class DashboardActivity extends AppCompatActivity {
 //                        db.execSQL(deleteQuery);
 //                        Toast.makeText(DashboardActivity.this, "Account Deleted Successfully", Toast.LENGTH_SHORT).show();
 //                        doLogout();
+
+
+//                        if(new ConnectionDetector(DashboardActivity.this).isConnectingToInternet()){
+//                            new DeleteTask().execute();
+//                        }
+//                        else{
+//                            new ConnectionDetector(DashboardActivity.this).connectiondetect();
+//                        }
+
+
+
+
                         if(new ConnectionDetector(DashboardActivity.this).isConnectingToInternet()){
-                            new DeleteTask().execute();
+                            pd = new ProgressDialog(DashboardActivity.this);
+                            pd.setMessage("Please Wait...");
+                            pd.setCancelable(false);
+                            pd.show();
+                            deRetrofitDelete();
                         }
                         else{
                             new ConnectionDetector(DashboardActivity.this).connectiondetect();
@@ -181,6 +208,43 @@ public class DashboardActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+
+    }
+
+    private void deRetrofitDelete() {
+        Call<GetSignupData> call = apiInterface.getDeleteData(
+                sp.getString(ConstantSp.USERID,"")
+        );
+
+        call.enqueue(new Callback<GetSignupData>() {
+            @Override
+            public void onResponse(Call<GetSignupData> call, Response<GetSignupData> response) {
+                pd.dismiss();
+                if(response.code() == 200){
+                    if(response.body().status){
+                        new CommonMethod(DashboardActivity.this,response.body().message);
+                        Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
+                        startActivity(intent);
+
+                        sp.edit().clear().commit();
+                    }
+                    else{
+                        new CommonMethod(DashboardActivity.this,response.body().message);
+                    }
+                }
+                else{
+                    new CommonMethod(DashboardActivity.this,"Server Error Code : "+response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetSignupData> call, Throwable t) {
+                pd.dismiss();
+                new CommonMethod(DashboardActivity.this,t.getMessage());
+                Log.d("RESPONSE",t.getMessage());
+            }
+        });
+
 
     }
 
